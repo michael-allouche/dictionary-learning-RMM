@@ -24,11 +24,11 @@ if __name__ == '__main__':
     #                                list_lambdas=[0.1, 0.25, 0.5, 0.75, 0.9, 1, 5, 10],
     #                                test_size=0.2, r_dim=11)
 
-    df_selection = model_selection(P, list_K=[2, 3, 4],
-                                   list_lambdas=[0.5],
+    df_selection = model_selection(P, list_K=[11, 12, 13, 14, 15],
+                                   list_lambdas=[0.1, 0.25, 0.5, 0.75, 0.9, 1, 5, 10],
                                    test_size=0.2)
 
-    df_selection.to_csv("ckpt/model_selection.csv")
+    df_selection.to_csv("ckpt/model_selection_11-14.csv")
 
     # model = DictionaryLearning(K=K, r_dim=R_DIM)
     # model.fit(Ptrain, lamb=LAMB,  max_iter=MAX_ITER)
