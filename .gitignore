@@ -18,5 +18,4 @@ backup/
 VM/
 
 # Extension #
-*.csv
 *.xlsx
