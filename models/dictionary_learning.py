@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import random
 
+# optimization with verbose=False
 solvers.options['show_progress'] = False
 sns.set_style("whitegrid", {'grid.linestyle': '--'})
 
@@ -15,14 +16,14 @@ class DictionaryLearning():
         self.K = K  # truncature
         self.r_dim = r_dim  # nb of columns in the RMM
         self.d_dim = (self.r_dim-1) * self.r_dim  # dimension of the problem
-        self.n_mat = None  # numbr of matrices (T)
+        self.n_mat = None  # number of matrices (T)
         self.verbose = verbose  # printing
 
 
         # initialization of ojects to optimize
         self.D = np.zeros(shape=(self.d_dim, self.K))  # dictionary
         self.A = None  # codings
-        self.W = np.ones(shape=self.K)  # drift
+        self.W = np.ones(shape=self.K)  # AR parameter
         self.mu = None  # constant AR
 
         # fit constraints

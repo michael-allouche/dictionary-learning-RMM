@@ -37,8 +37,13 @@ pd.DataFrame(P[:, 0].reshape(10,11,order='F'), columns=np.arange(1,12), index=np
 ```
 ![p1](imgs/data/p1.png)
 
+## Training
 
+## Dictionary
 
+## Prediction
+
+## Clustering
 
 ## Citation
 
