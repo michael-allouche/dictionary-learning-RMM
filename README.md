@@ -35,7 +35,7 @@ Display the first migration matrix in matrix form
 ```
 pd.DataFrame(P[:, 0].reshape(10,11,order='F'), columns=np.arange(1,12), index=np.arange(1,11))
 ```
-![p1](imgs/data/p1.png)
+![p1](imgs/data/P1.png)
 
 ## Training
 
