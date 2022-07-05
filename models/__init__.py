@@ -31,18 +31,18 @@ def prediction_score(Ptrain, Ptest, K, lamb):
     n_test = Ptest.shape[1]
 
     # build train set   
-    model_train = DictionaryLearning(K=K, r_dim=11)
-    model_train.fit(Ptrain, lamb=lamb, max_iter=500)
+    model = DictionaryLearning(K=K, r_dim=11)
+    model.fit(Ptrain, lamb=lamb, max_iter=500)
 
     # projection of P^test on D^train
-    A_test = np.linalg.inv(model_train.D.T @ model_train.D) @ model_train.D.T @ Ptest
+    A_test = np.linalg.inv(model.D.T @ model.D) @ model.D.T @ Ptest
 
-    mu = model_train.mu.reshape(-1, 1)
-    cov = np.diag(np.var(model_train.A, axis=1) * (1 - model_train.W ** 2))  # diagonal is the estimated variance of the noise
+    mu = model.mu.reshape(-1, 1)
+    cov = np.diag(np.var(model.A, axis=1) * (1 - model.W ** 2))  # diagonal is the estimated variance of the noise
     noise = np.random.multivariate_normal(np.zeros(K), cov, int(n_test) - 1).T
-    A_pred = mu + (model_train.W.reshape(-1, 1) * A_test[:, :-1]) + noise  # without the last testing value
+    A_pred = mu + (model.W.reshape(-1, 1) * A_test[:, :-1]) + noise  # without the last testing value
 
-    P_pred = model_train.D @ A_pred
+    P_pred = model.D @ A_pred
     score = np.linalg.norm(Ptest[:, 1:] - P_pred) ** 2
 
     return score

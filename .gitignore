@@ -8,7 +8,7 @@
 ################
 .vscode/
 .idea/
-__pychache__
+__pychache__/
 .ipynb_checkpoints/
 .Rhistory
 

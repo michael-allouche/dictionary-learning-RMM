@@ -88,7 +88,6 @@ class DictionaryLearning():
         # --------------------------------------
         iteration = 0
 
-        # TODO: attention P n'est pas dans Omegapas
         # initialize the dictionary with random signals from the data
         self.D = P[:, random.sample(range(self.n_mat), self.K)]
 
@@ -181,7 +180,6 @@ class DictionaryLearning():
         return
 
 
-
     def regularization(self, lamb, k):
         """get rehularization term \lamb * <A_k, H A_k>"""
         mat = np.zeros(shape=(self.n_mat, self.n_mat))
@@ -196,9 +194,6 @@ class DictionaryLearning():
             auxiliar[i, i] = 1 - 1 / self.n_mat
         H_tilde = auxiliar @ (mat @ auxiliar)
         return H_tilde
-
-    def clustering(self):
-        return
 
 
 # -------------------------------------------------------------------------------------
@@ -217,15 +212,10 @@ class DictionaryLearning():
         """
 
         reconstruction = np.linalg.norm(P - self.D @ self.A) ** 2
-
         mean_est = self.A.mean(axis=1).reshape(-1,1)
         regularization = np.sum((self.A[:, 1:] - mean_est - (self.W.reshape(-1, 1) * (self.A[:, :-1] - mean_est))) ** 2)
-
-
-
         objective = reconstruction + lamb * regularization
         return reconstruction, regularization, objective
-
 
 
     def circulent_A(self, k):
