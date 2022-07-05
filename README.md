@@ -15,13 +15,6 @@ cd dictionary-learning-RMM
 
 
 Install the Python version and the requirements used in this repo
-- Python 3.10
-
-_via pip_
-
-`pip install -r requirements.txt`
-
-_or via conda_
 
 ```
 conda create --name dl_rmm python=3.10
@@ -30,6 +23,20 @@ conda install --file requirements.txt
 ```
 
 ## Data
+Load the full dataset
+```
+from utils.data_management import load_data
+P = load_data()
+pd.DataFrame(P)
+```
+![data](imgs/data/data-MM.png)
+
+Display the first migration matrix in matrix form
+```
+pd.DataFrame(P[:, 0].reshape(10,11,order='F'), columns=np.arange(1,12), index=np.arange(1,11))
+```
+![p1](imgs/data/p1.png)
+
 
 
 
