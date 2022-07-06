@@ -109,6 +109,6 @@ class MatrixConstraints():
 if __name__ == "__main__":
     NMAT = 1
     RDIM = 4
-    constraints = MatrixConstraintsGT(NMAT, RDIM)
-    constraints.stochastic()
+    constraints = MatrixConstraints(NMAT, RDIM)
+    constraints.positivity()
 

@@ -99,8 +99,8 @@ class DictionaryLearning():
             # update dictionary
             self.fit_dictionary(P)
 
-            # update drift
-            self.fit_drift()
+            # update W
+            self.fit_W()
 
             # compute constant mu
             self.mu = (1 - self.W) * np.mean(self.A, axis=1)
@@ -157,19 +157,19 @@ class DictionaryLearning():
             p_k = self.vectorized(P_k).reshape(-1, 1)
             D_k = self.circulent_D(k)
             H_k = 2 * (D_k.T @ D_k)
-            c_k = -2 * (D_k.T @ p_k)
-            H_tilde = self.regularization(lamb, k)
-            H_tilde = (H_tilde + H_tilde.T)
-            H = H_k + H_tilde
+            c_k = - 2 * (D_k.T @ p_k)
+            R = self.regularization(k)
+            R = (R + R.T)  # symmetrization for the solver
+            H = H_k + lamb*R
 
             sol = solvers.qp(matrix(H, tc='d'), matrix(c_k, tc='d'), matrix(self.G_pos, tc='d'), matrix(self.h_pos, tc='d'))
             self.A[k - 1, :] = np.array(sol["x"]).ravel()
         return
 
     ##################################################################
-    #                           Drift update
+    #                           W update
     ##################################################################
-    def fit_drift(self):
+    def fit_W(self):
         """with mean constraint in the regularization"""
         for k in range(1, self.K + 1):
             time_series = [self.A[k - 1, t] for t in range(self.n_mat)]
@@ -181,20 +181,20 @@ class DictionaryLearning():
         return
 
 
-    def regularization(self, lamb, k):
+    def regularization(self, k):
         """get rehularization term \lamb * <A_k, H A_k>"""
         mat = np.zeros(shape=(self.n_mat, self.n_mat))
         for i in range(1, self.n_mat - 1):
-            mat[i, i] = (1 + self.W[k - 1] ** 2) * lamb
-            mat[i, i - 1] = -2 * self.W[k - 1] * lamb
-        mat[0, 0] = (self.W[k - 1] ** 2) * lamb
-        mat[self.n_mat - 1, self.n_mat - 1] = lamb
-        mat[self.n_mat - 1, self.n_mat - 2] = -2 * self.W[k - 1] * lamb
+            mat[i, i] = (1 + self.W[k - 1] ** 2)  # diagonal
+            mat[i, i - 1] = -2 * self.W[k - 1]  # lower diagonal
+        mat[0, 0] = (self.W[k - 1] ** 2)
+        mat[self.n_mat - 1, self.n_mat - 1] = 1
+        mat[self.n_mat - 1, self.n_mat - 2] = -2 * self.W[k - 1]
         auxiliar = (-1 / self.n_mat) * np.ones(shape=(self.n_mat, self.n_mat))
         for i in range(self.n_mat):
             auxiliar[i, i] = 1 - 1 / self.n_mat
-        H_tilde = auxiliar @ (mat @ auxiliar)
-        return H_tilde
+        H = auxiliar @ (mat @ auxiliar)
+        return H
 
 
 # -------------------------------------------------------------------------------------
@@ -249,9 +249,9 @@ class DictionaryLearning():
 
         """
         mat = np.zeros(shape=(self.d_dim*self.n_mat, self.n_mat))
-        indices = np.arange(0, self.d_dim*self.n_mat -2, self.d_dim)
+        indices = np.arange(0, self.d_dim*self.n_mat - 2, self.d_dim)
         for time, i in enumerate(indices):
-            mat[i:i+self.d_dim, int(i/self.d_dim)] = self.D[:,k-1]
+            mat[i:i+self.d_dim, int(i/self.d_dim)] = self.D[:, k-1]
         return mat
 
 
