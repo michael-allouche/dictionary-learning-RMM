@@ -52,9 +52,9 @@ model.fit(P, lamb=6, max_iter=500)
 Each dictionary atom in a matrix form is a representative RMM of the risk configuration included in the dataset. 
 ### Atom 1 (stable risk)
 ![a1](imgs/dictionary/atom_stable.png)
-###Atom 2 (upgrade risk)
+### Atom 2 (upgrade risk)
 ![a2](imgs/dictionary/atom_upgrade.png)
-###Atom 3 (downgrade risk)
+### Atom 3 (downgrade risk)
 ![a3](imgs/dictionary/atom_downgrade.png)
 
 ## Clustering
