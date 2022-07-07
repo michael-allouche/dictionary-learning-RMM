@@ -1,0 +1,7 @@
+cvxopt=1.2.7
+numpy=1.22.4
+seaborn=0.11.2
+scikit-learn=1.0.2
+statsmodels=0.13.2
+matplotlib=3.5.1
+seaborn=0.11.2
