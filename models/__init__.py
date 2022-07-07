@@ -7,7 +7,7 @@ import itertools
 
 
 
-def model_selection(P, list_K, list_lambdas, test_size):
+def model_selection(P, list_K, list_lambdas, test_size, verbose=False):
     n_mat = P.shape[1]
     n_test = int((test_size) * n_mat)
     Ptest = P[:, -int(n_test):]
@@ -17,16 +17,17 @@ def model_selection(P, list_K, list_lambdas, test_size):
     elements = itertools.product(*[list_K, list_lambdas])
 
     for element in elements:
-        print(element)
+        if verbose:
+            print(element)
         K = element[0]
         lamb = element[1]
-        df_scores.loc[K, lamb] = prediction_score(Ptrain, Ptest, K, lamb)
+        df_scores.loc[K, lamb] = prediction_score(Ptrain, Ptest, K, lamb, test_size)
 
     return df_scores
 
 
 
-def prediction_score(Ptrain, Ptest, K, lamb):
+def prediction_score(Ptrain, Ptest, K, lamb, test_size):
     np.random.seed(42)
     n_test = Ptest.shape[1]
 
@@ -42,8 +43,11 @@ def prediction_score(Ptrain, Ptest, K, lamb):
     noise = np.random.multivariate_normal(np.zeros(K), cov, int(n_test) - 1).T
     A_pred = mu + (model.W.reshape(-1, 1) * A_test[:, :-1]) + noise  # without the last testing value
 
+    P_reco = model.D@model.A
     P_pred = model.D @ A_pred
-    score = np.linalg.norm(Ptest[:, 1:] - P_pred) ** 2
 
-    return score
+    score_train = np.linalg.norm(Ptrain - P_reco) ** 2
+    score_test = np.linalg.norm(Ptest[:, 1:] - P_pred) ** 2  # without the first value
+
+    return test_size*score_train + (1-test_size)*score_test
 

@@ -15,6 +15,7 @@ __pychache__/
 # Directories #
 backup/
 VM/
+paper/
 
 # Extension #
 *.xlsx
