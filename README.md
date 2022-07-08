@@ -1,5 +1,5 @@
 # Structured Dictionary Learning of Rating Migration Matrices for Credit Risk Modeling
-Implementation of the paper ["Structured Dictionary Learning of Rating Migration Matrices for Credit Risk Modeling"](LINK),
+Implementation of the paper ["Structured Dictionary Learning of Rating Migration Matrices for Credit Risk Modeling"](https://hal.archives-ouvertes.fr/hal-03715954),
 by Michaël Allouche, [Emmanuel Gobet](http://www.cmap.polytechnique.fr/~gobet/), Clara Lage and Edwin Mangin.
 
 ## Abstract
@@ -43,7 +43,7 @@ pd.DataFrame(P[:, 0].reshape(10,11,order='F'), columns=np.arange(1,12), index=np
 
 ## Training
 - Select the number of atoms (K) and the number of columns of the RMM (r_dim)
-- The encoded constraints refer to the ones described in Section 1.5 in the paper
+- The encoded constraints refer to the ones described in Section 1.5 in the [paper](https://hal.archives-ouvertes.fr/hal-03715954)
 ```
 from models import DictionaryLearning
 model = DictionaryLearning(K=3, r_dim=11)
@@ -65,5 +65,12 @@ Each cluster can interpreted thanks to the weight proportion of the codings to e
 
 
 ## Citation
-
+@unpublished{allouche:hal-03715954,
+  TITLE = {{Structured Dictionary Learning of Rating Migration Matrices for Credit Risk Modeling}},
+  AUTHOR = {Allouche, Micha{\"e}l and Gobet, Emmanuel and Lage, Clara and Mangin, Edwin},
+  URL = {https://hal.archives-ouvertes.fr/hal-03715954},
+  NOTE = {preprint},
+  YEAR = {2022},
+  MONTH = Jul,
+}
 
