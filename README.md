@@ -65,12 +65,11 @@ Each cluster can interpreted thanks to the weight proportion of the codings to e
 
 
 ## Citation
-@unpublished{allouche:hal-03715954,
-  TITLE = {{Structured Dictionary Learning of Rating Migration Matrices for Credit Risk Modeling}},
-  AUTHOR = {Allouche, Micha{\"e}l and Gobet, Emmanuel and Lage, Clara and Mangin, Edwin},
-  URL = {https://hal.archives-ouvertes.fr/hal-03715954},
-  NOTE = {preprint},
-  YEAR = {2022},
-  MONTH = Jul,
+@unpublished{allouche:hal-03715954,\
+  TITLE = {{Structured Dictionary Learning of Rating Migration Matrices for Credit Risk Modeling}},\
+  AUTHOR = {Allouche, Micha{\"e}l and Gobet, Emmanuel and Lage, Clara and Mangin, Edwin},\
+  URL = {https://hal.archives-ouvertes.fr/hal-03715954}, \
+  NOTE = {preprint},\
+  YEAR = {2022} \
 }
 
