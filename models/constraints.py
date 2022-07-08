@@ -1,3 +1,5 @@
+# File with encoded stochastic and economic constraints
+
 import numpy as np
 
 
@@ -100,8 +102,6 @@ class MatrixConstraints():
 
     def get_equalities(self):
         return self.Q, self.s
-
-
 
 
 

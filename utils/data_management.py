@@ -1,16 +1,12 @@
-import pandas as pd
 import numpy as np
 from pathlib import Path
 from models.constraints import MatrixConstraints
-
-
-# def load_data():
-#     return pd.read_csv(Path("data", "rating_migration_matrices.csv"), index_col=0)
 
 def load_data():
     return np.load(Path("data", "rating_migration_matrices.npy"))
 
 def check_constraints(data):
+    """compute the proportion of constraints unsatisfied"""
     constraints = MatrixConstraints(r_dim=11)
     constraints.fit()
     G, h = constraints.get_inequalities()

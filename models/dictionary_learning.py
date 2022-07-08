@@ -2,7 +2,6 @@ import numpy as np
 from models.constraints import MatrixConstraints
 from cvxopt import matrix
 from cvxopt import solvers
-import matplotlib.pyplot as plt
 import seaborn as sns
 import random
 
@@ -215,7 +214,7 @@ class DictionaryLearning():
 
     def circulent_A(self, k):
         """
-        Compute \tilde A_k
+        Compute \tilde A_k int the paper
         Parameters
         ----------
         k : int
@@ -233,11 +232,11 @@ class DictionaryLearning():
 
     def circulent_D(self, k):
         """
-
+        Compute \tilde D_k matrix in the paper
         Parameters
         ----------
-        k :
-
+        k : int
+            k-th atom
         Returns
         -------
 
@@ -249,91 +248,13 @@ class DictionaryLearning():
         return mat
 
 
-
-
-    ##################################################################
-    #                   Visualization
-    ##################################################################
-
-
-
-    # def plot_rro(self, trunc=0):
-    #     """plot reconstruction, regularization, objective"""
-    #     fig, axes = plt.subplots(3, 1, figsize=(15, 13), sharex=False, squeeze=False)
-    #     # reconstruction, regularization, objective = self.get_rro(P, lamb)
-    #     iterations = np.arange(len(self.list_total_objective))[trunc:]
-    #
-    #     axes[0, 0].plot(iterations, self.list_reconstruction[trunc:])
-    #     axes[0, 0].set_title(r"Reconstruction $||P-DA||_F^2$")
-    #     axes[0, 0].legend()
-    #
-    #     axes[1, 0].plot(iterations, self.list_regularization[trunc:])
-    #     axes[1, 0].set_title(r"Regularizaton $||P-DA||_F^2$")
-    #
-    #     axes[2, 0].plot(iterations, self.list_total_objective[trunc:])
-    #     axes[2,0].set_title(r"Objective $(1-\lambda)||P-DA||_F^2 + \lambda\sum_{k=1}^K\sum_{t =1}^{T-1} \left(\alpha_{k}^{t+1} - w_k\alpha_{k}^{t}\right)^2$")
-    #     axes[2, 0].set_xlabel("DL iterations")
-    #
-    #     for i in range(3):
-    #         axes[i, 0].spines["left"].set_color("black")
-    #         axes[i, 0].spines["bottom"].set_color("black")
-    #
-    #     return
-    #
-    # def plot_objective(self):
-    #     plt.figure(figsize=(12, 7))
-    #     plt.title("Objective function")
-    #     plt.plot(np.arange(len(self.list_total_objective)), self.list_total_objective)
-    #     plt.xlabel("DL iterations")
-    #     plt.ylabel("value")
-    #     # plt.ylim(np.median(self.list_total_objective) * 0.5, np.median(self.list_total_objective) * 2)
-    #     return
-    #
-    # def plot_codings_update(self, iteration):
-    #     fig, axes = plt.subplots(2, 1, figsize=(15, 15), sharex=False, squeeze=False)
-    #     fig.suptitle("Codings update at iteration {}".format(iteration),fontsize=15)
-    #     objective = self.list_codings_objective[iteration-1]
-    #     axes[0,0].plot(np.arange(len(objective)), objective)
-    #     axes[0,0].set_title(r"Coding update $||\alpha^{i+1} - \alpha^{i}||$")
-    #     axes[0,0].set_title("Coding objective update")
-    #     axes[0,0].set_xlabel("inner FISTA iteration")
-    #     axes[0,0].set_ylabel("value")
-    #
-    #     norme0 = self.list_codings_norm0[iteration-1]
-    #     axes[1,0].plot(np.arange(len(norme0)), norme0)
-    #     axes[1,0].set_title("Number of non-zeros, ||A||_0")
-    #     axes[1,0].set_xlabel("time t")
-    #     axes[1,0].set_ylabel("value")
-    #     return
-    #
-    # def hist_codings(self, t):
-    #     plt.figure(figsize=(12, 7))
-    #     plt.title("Histogram of codings at time t={}".format(t))
-    #     plt.hist(self.A[t-1, :])
-    #     return
-    #
-    # def plot_codings(self, saved=False):
-    #     fig, ax = plt.subplots(figsize=(15, 7))
-    #     plt.plot(self.A[0, :], label="atom 0")
-    #     plt.plot(self.A[1, :], label="atom 1")
-    #     plt.xlabel('Time t', fontsize=20)
-    #     plt.ylabel("value", fontsize=20)
-    #     ax.spines["left"].set_color("black")
-    #     ax.spines["bottom"].set_color("black")
-    #     plt.xticks(fontsize=20)
-    #     plt.yticks(fontsize=20)
-    #     plt.legend(fontsize=20)
-    #     title = ""
-    #     _ = plt.title("Codings {}".format(title), fontsize=20)
-    #     if saved:
-    #         plt.savefig("imgs/codings_{}.eps".format(title), format="eps")
-    #     return
-
     @staticmethod
     def vectorized(x, order='F'):
+        """vectorization with column major"""
         return x.flatten(order=order)
     @staticmethod
     def inv_vectorized(x, nrow, ncol, order='F'):
+        """inverse vectorization with column major"""
         return np.reshape(x, (nrow, ncol), order=order)
 
 

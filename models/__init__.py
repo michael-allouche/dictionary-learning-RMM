@@ -8,6 +8,26 @@ import itertools
 
 
 def model_selection(P, list_K, list_lambdas, test_size, verbose=False):
+    """
+    Summary of all scores
+    Parameters
+    ----------
+    P :  ndarray
+        data
+    list_K :  list
+        some values of K
+    list_lambdas :  list
+        some values of lambda
+    test_size :  float
+        proportion to the test size in the train/test split. In the paper we used 0.2
+    verbose :  bool
+        if True, print elements
+
+    Returns
+    -------
+    DataFrame
+        matrix of scores
+    """
     n_mat = P.shape[1]
     n_test = int((test_size) * n_mat)
     Ptest = P[:, -int(n_test):]
@@ -28,6 +48,26 @@ def model_selection(P, list_K, list_lambdas, test_size, verbose=False):
 
 
 def prediction_score(Ptrain, Ptest, K, lamb, test_size):
+    """
+    Implementation of Algorithm 2 in the paper
+    Parameters
+    ----------
+    Ptrain : ndarray
+        data train
+    Ptest : ndarray
+        data test
+    K : int
+        number of atoms
+    lamb : float
+        lambda
+    test_size : float
+        test proportion
+
+    Returns
+    -------
+    float
+        metric
+    """
     np.random.seed(42)
     n_test = Ptest.shape[1]
 

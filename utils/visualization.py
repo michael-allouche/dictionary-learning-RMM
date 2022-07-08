@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-import seaborn as sns
 import numpy as np
 import pandas as pd
 from datetime import date
@@ -12,7 +11,7 @@ dates = pd.date_range(sdate,edate, freq='m')
 
 
 def plot_rro(dict_reco, dict_regu, dict_obj, trunc=0):
-    """plot reconstruction, regularization, objective"""
+    """plot reconstruction, regularization, objective with respect to the DL iterations"""
 
     fig, axes = plt.subplots(3, 1, figsize=(15, 13), sharex=False, squeeze=False)
     iterations = np.arange(len(list(dict_reco.values())[0]))[trunc:]
@@ -44,7 +43,7 @@ def plot_rro(dict_reco, dict_regu, dict_obj, trunc=0):
 
 def plot_codings_lamb(dict_codings, atom):
     """
-    compare lambds for a given atom
+    plot the codings with repect tot he iterations for different values of lambda
     """
 
     fig, axes = plt.subplots(1, 1, figsize=(15, 7), sharex=False, squeeze=False)
@@ -66,6 +65,5 @@ def plot_codings_lamb(dict_codings, atom):
 
     _ = plt.xticks(fontsize=20, rotation=30)
     _ = plt.yticks(fontsize=20)
-
 
     return
