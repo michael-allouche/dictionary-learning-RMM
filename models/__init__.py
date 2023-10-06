@@ -7,7 +7,7 @@ import itertools
 
 
 
-def model_selection(P, list_K, list_lambdas, test_size, verbose=False):
+def model_selection(P, list_K, list_lambdas, test_size, replications=100, verbose=False):
     """
     Summary of all scores
     Parameters
@@ -41,13 +41,13 @@ def model_selection(P, list_K, list_lambdas, test_size, verbose=False):
             print(element)
         K = element[0]
         lamb = element[1]
-        df_scores.loc[K, lamb] = prediction_score(Ptrain, Ptest, K, lamb, test_size)
+        df_scores.loc[K, lamb] = prediction_score(Ptrain, Ptest, K, lamb, test_size, replications)
 
     return df_scores
 
 
 
-def prediction_score(Ptrain, Ptest, K, lamb, test_size):
+def prediction_score(Ptrain, Ptest, K, lamb, test_size, replications=100):
     """
     Implementation of Algorithm 2 in the paper
     Parameters
@@ -70,6 +70,7 @@ def prediction_score(Ptrain, Ptest, K, lamb, test_size):
     """
     np.random.seed(42)
     n_test = Ptest.shape[1]
+    list_errors = []
 
     # build train set   
     model = DictionaryLearning(K=K, r_dim=11)
@@ -80,14 +81,15 @@ def prediction_score(Ptrain, Ptest, K, lamb, test_size):
 
     mu = model.mu.reshape(-1, 1)
     cov = np.diag(np.var(model.A, axis=1) * (1 - model.W ** 2))  # diagonal is the estimated variance of the noise
-    noise = np.random.multivariate_normal(np.zeros(K), cov, int(n_test) - 1).T
-    A_pred = mu + (model.W.reshape(-1, 1) * A_test[:, :-1]) + noise  # without the last testing value
+    for rep in range(replications):
+        noise = np.random.multivariate_normal(np.zeros(K), cov, int(n_test) - 1).T
+        A_pred = mu + (model.W.reshape(-1, 1) * A_test[:, :-1]) + noise  # without the last testing value
 
-    P_reco = model.D@model.A
-    P_pred = model.D @ A_pred
+        P_reco = model.D@model.A
+        P_pred = model.D @ A_pred
 
-    score_train = np.linalg.norm(Ptrain - P_reco) ** 2
-    score_test = np.linalg.norm(Ptest[:, 1:] - P_pred) ** 2  # without the first value
-
-    return test_size*score_train + (1-test_size)*score_test
+        score_train = np.linalg.norm(Ptrain - P_reco) ** 2
+        score_test = np.linalg.norm(Ptest[:, 1:] - P_pred) ** 2  # without the first value
+        list_errors.append(test_size*score_train + (1-test_size)*score_test)
+    return np.mean(list_errors)
 
