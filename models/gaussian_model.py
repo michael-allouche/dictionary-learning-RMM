@@ -57,9 +57,20 @@ class GaussianCopula():
 
         n_data = self.P_Phi.shape[1]
         # least square estimate
-        term1 = vectorized(self.P_Phi)
-        term2 = np.tile(self.P_Phi_TTC, n_data)
-        self.alpha2 = ((term1 * term2).sum() / (n_data * (self.P_Phi_TTC ** 2).sum()))
+        # Parametrisartion 1
+        # ----------------
+        # term1 = vectorized(self.P_Phi)
+        # term2 = np.tile(self.P_Phi_TTC, n_data)
+        # self.alpha2 = ((term1 * term2).sum() / (n_data * (self.P_Phi_TTC ** 2).sum()))
+
+        # Parametrisartion 2
+        # ------------------
+        term1 = vectorized(self.P_Phi - self.P_Phi.mean(axis=0))
+        term2 = np.tile(self.P_Phi_TTC - self.P_Phi_TTC.mean(), n_data)
+        self.alpha2 = ((term1 * term2).sum() / (n_data * ((self.P_Phi_TTC-self.P_Phi_TTC.mean()) ** 2).sum()))
+
+
+
 
         # residuals
         self.alpha1 = np.array([np.sum(self.P_Phi[:, t] - self.alpha2*self.P_Phi_TTC) for t in range(n_data)]) / n_data

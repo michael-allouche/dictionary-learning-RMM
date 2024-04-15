@@ -169,7 +169,10 @@ class DictionaryLearning():
             mean = np.mean(time_series)
             time_series = [time_series[t] - mean for t in range(self.n_mat)]
             nominator = sum([time_series[t] * time_series[t - 1] for t in range(1, self.n_mat)])
-            denominator = sum([time_series[t] ** 2 for t in range(0, self.n_mat - 1)])
+            # denominator = sum([time_series[t] ** 2 for t in range(0, self.n_mat - 1)])
+            norm1 = sum([time_series[t]**2 for t in range(1, self.n_mat)])
+            norm2 = sum([time_series[t-1]**2 for t in range(1, self.n_mat)])
+            denominator = np.sqrt(norm1*norm2)  # for numerical stability
             self.W[k - 1] = nominator / (denominator)
         return
 
@@ -188,6 +191,26 @@ class DictionaryLearning():
             auxiliar[i, i] = 1 - 1 / self.n_mat
         H = auxiliar @ (mat @ auxiliar)
         return H
+
+    # def predicted_codings(self, X):
+    #     """
+    #     Coding predictions \mu_k + X*w_k
+    #     """
+    #     mean_est = self.A.mean(axis=1).reshape(-1, 1) * (1 - self.W.reshape(-1, 1))
+    #     return mean_est + (self.W.reshape(-1, 1) * X)
+
+    def predicted_codings(self, X, steps, seed):
+        """
+        Coding predictions \mu_k + X*w_k + epsilon_k
+        """
+        np.random.seed(seed)
+        mean_est = self.A.mean(axis=1).reshape(-1, 1) * (1 - self.W.reshape(-1, 1))
+        cov = np.diag(np.var(self.A, axis=1) * (1 - self.W ** 2))  # diagonal is the estimated variance of the noise
+
+        for step in range(steps):
+            eps = np.random.multivariate_normal(np.zeros(self.K), cov, 1).T
+            X = mean_est + (self.W.reshape(-1, 1) * X) + eps
+        return X
 
 
 # -------------------------------------------------------------------------------------

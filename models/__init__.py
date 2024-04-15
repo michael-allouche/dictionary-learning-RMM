@@ -3,7 +3,10 @@ import numpy as np
 
 from models.constraints import MatrixConstraints
 from models.dictionary_learning import DictionaryLearning
+from models.rmm_generator import MatrixGenerator
 import itertools
+
+from pathlib import Path
 
 
 
@@ -41,13 +44,13 @@ def model_selection(P, list_K, list_lambdas, test_size, replications=100, verbos
             print(element)
         K = element[0]
         lamb = element[1]
-        df_scores.loc[K, lamb] = prediction_score(Ptrain, Ptest, K, lamb, test_size, replications)
+        df_scores.loc[K, lamb] = prediction_score(Ptrain, Ptest, K, lamb)
 
     return df_scores
 
 
 
-def prediction_score(Ptrain, Ptest, K, lamb, test_size, replications=100):
+def prediction_score(Ptrain, Ptest, K, lamb):
     """
     Implementation of Algorithm 2 in the paper
     Parameters
@@ -80,16 +83,36 @@ def prediction_score(Ptrain, Ptest, K, lamb, test_size, replications=100):
     A_test = np.linalg.inv(model.D.T @ model.D) @ model.D.T @ Ptest
 
     mu = model.mu.reshape(-1, 1)
-    cov = np.diag(np.var(model.A, axis=1) * (1 - model.W ** 2))  # diagonal is the estimated variance of the noise
-    for rep in range(replications):
-        noise = np.random.multivariate_normal(np.zeros(K), cov, int(n_test) - 1).T
-        A_pred = mu + (model.W.reshape(-1, 1) * A_test[:, :-1]) + noise  # without the last testing value
+    # cov = np.diag(np.var(model.A, axis=1) * (1 - model.W ** 2))  # diagonal is the estimated variance of the noise
+    var = np.var(model.A, axis=1) * (1 - model.W ** 2)
+    A_pred = mu + (model.W.reshape(-1, 1) * A_test[:, :-1])  # without last Atest
+    nll = 1/(2*var) * np.sum((A_test[:, 1:]-A_pred)**2,  axis=1) + ((n_test-1)*np.log(np.sqrt(var)) ) # negative log-likelihood
+    return np.mean(nll)
 
-        P_reco = model.D@model.A
-        P_pred = model.D @ A_pred
 
-        score_train = np.linalg.norm(Ptrain - P_reco) ** 2
-        score_test = np.linalg.norm(Ptest[:, 1:] - P_pred) ** 2  # without the first value
-        list_errors.append(test_size*score_train + (1-test_size)*score_test)
-    return np.mean(list_errors)
+if __name__ == "__main__":
+    P = np.load(Path("..", "data", "rating_migration_matrices.npy"))
+    N_MAT = P.shape[1]
+    n_test = int(0.2 * N_MAT)
+    P_test = P[:, -int(n_test):]
+    n_train = int(N_MAT - n_test)
+    P_train = P[:, :int(N_MAT - n_test)]
+    df_selection = model_selection(P_train, list_K=[2],
+                                   list_lambdas=[0.01],
+                                   test_size=0.2, replications=100)
+
+
+    #
+    # # Previous algorithm
+    # for rep in range(replications):
+    #     noise = np.random.multivariate_normal(np.zeros(K), cov, int(n_test) - 1).T
+    #     A_pred = mu + (model.W.reshape(-1, 1) * A_test[:, :-1]) + noise  # without the last testing value
+    #
+    #     P_reco = model.D@model.A
+    #     P_pred = model.D @ A_pred
+    #
+    #     score_train = np.linalg.norm(Ptrain - P_reco) ** 2
+    #     score_test = np.linalg.norm(Ptest[:, 1:] - P_pred) ** 2  # without the first value
+    #     list_errors.append(test_size*score_train + (1-test_size)*score_test)
+    # return np.mean(list_errors)
 

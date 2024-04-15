@@ -11,6 +11,7 @@ def check_constraints(data):
     constraints.fit()
     G, h = constraints.get_inequalities()
     Q, s = constraints.get_equalities()
+    print(G.shape)
     n_constraints = G.shape[0] + Q.shape[0]
 
     ineq_unsatisfied = np.minimum((np.round(G @ data, 5) > np.round(h, 5)).sum(axis=1), 1).sum()

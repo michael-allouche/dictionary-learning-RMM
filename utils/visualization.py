@@ -49,16 +49,16 @@ def plot_codings_lamb(dict_codings, atom):
     fig, axes = plt.subplots(1, 1, figsize=(15, 7), sharex=False, squeeze=False)
     n_data = list(dict_codings.values())[0].shape[1]
 
-    # list_linestyle = ["-", "--", "-.", ":"]
-    # i = 0
+    list_linestyle = ["-", "--", "-.", ":"]
+    i = 0
     for k, v in dict_codings.items():
         # print(dates[n_train].shape, dict_codings[k][atom].shape)
-        axes[0, 0].plot(dates[:n_data], dict_codings[k][atom-1], label=k, linewidth=2)
+        axes[0, 0].plot(dates[:n_data], dict_codings[k][atom-1], label=k, linewidth=2, linestyle=list_linestyle[i])
         axes[0, 0].set_title(f"Atom {atom}")
         axes[0, 0].legend(title='Lambda', title_fontsize=15,
                           prop={"size": 13}, loc='upper center', bbox_to_anchor=(0.5, 1.18),
                           fancybox=True, shadow=True, ncol=4)
-        # i += 1
+        i += 1
 
     axes[0, 0].spines["left"].set_color("black")
     axes[0, 0].spines["bottom"].set_color("black")
